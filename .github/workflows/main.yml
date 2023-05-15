@@ -1,13 +1,16 @@
-language: node_js
-node_js:
-  - "stable"
-cache:
-  directories:
-    - node_modules
-before_install:
-  - npm install -g @lhci/cli@0.3.x
-script:
-  - npm run build
-  - lhci autorun
-addons:
-  chrome: stable
+name: Lighthouse CI
+on: push
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Audit URLs using Lighthouse
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            https://example.com/
+            https://example.com/blog
+          budgetPath: ./budget.json # test performance budgets
+          uploadArtifacts: true # save results as an action artifacts
+          temporaryPublicStorage: true # upload lighthouse report to the temporary storage
